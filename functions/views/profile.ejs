@@ -1,0 +1,28 @@
+<%- include('partials/head')%>
+<%- include('partials/navbar')%>
+
+<div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+  <main role="main" class="inner-cover" style="height: 80vh">
+    <div class="h-100 d-flex flex-column justify-content-center align-items-center">
+
+      <% if (profile !== undefined && profile.token) { %>
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" alt="Card image cap" src=<%= profile.photoURL%>>
+                <div class="card-body">
+                    <h5 class="card-title"><%= profile.displayName%> Profile</h5>
+                    <p class="card-text">View your profile details and token</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">username: <%= profile.username%></li>
+                    <li class="list-group-item">Token: <%= profile.token%></li>
+                </ul>
+            </div>
+      <% } %> <% if (error !== undefined) { %>
+        <h1 class="coverHeading">Error</h1>
+        <p class="lead">Issue getting your profile data</p>s
+        <p class="lead"><%= error %></p>
+      <% } %>
+    </div>
+  </main>
+</div>
+<%- include('partials/footer')%>

@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+      // is the request coming from an logged in user?
+      function isSignedIn() {
+          return request.auth != null;
+      }
+
+      // does the logged-in user exist in the users collection?
+      function userExists() {
+          return exists(/databases/$(database)/documents/users/$(request.auth.uid));
+      }
+
+      // Does the logged-in user match the requested userId?
+      function isUser(userId) {
+          return request.auth.uid == userId;
+      }
+
+      function hasRequiredFields(requiredList) {
+          return (request.resource.data.keys().hasAll(requiredList));
+      }
+
+      match /{document=**} {
+          allow read, write: if false;
+      }
+
+      match /users/{uid} {
+          // only create new data document if incoming data contains all the required fields
+          allow create: if
+            isSignedIn() && isUser(uid) &&
+            hasRequiredFields(['username', 'photoURL', 'displayName', 'token']) == true;
+          allow get: if isSignedIn() && isUser(uid);
+      }
+
+      match /data/{id} {
+          // only create new data document if incoming data contains all the required fields
+          allow create: if
+            hasRequiredFields(['ownerName', 'repoName', 'tag', 'lead_time', 'created_at']) == true;
+          allow read: if
+            isSignedIn() && userExists();
+      }
+
+  }
+}

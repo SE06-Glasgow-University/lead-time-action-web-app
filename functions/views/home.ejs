@@ -1,0 +1,25 @@
+<%- include('partials/head')%> <%- include('partials/navbar')%>
+
+<div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+  <main role="main" class="inner-cover" style="height: 80vh">
+    <div class="h-100 d-flex flex-column justify-content-center align-items-center">
+      <h1 class="cover-heading">Lead Time For Change Visualiser</h1>
+      <p class="lead">
+        View the lead time for change of your GitHub project over time in a visual
+        way!!!
+      </p>
+      <p class="lead">
+        <% if (loggedIn !== undefined && loggedIn === true) { %>
+          <a href="/app/profile" class="btn btn-lg btn-primary">Profile</a>
+          <a href="/app/graph-login" class="btn btn-lg btn-primary">View Graphs</a>
+        <% } %>
+        <% if (loggedIn !== undefined && loggedIn === false) { %>
+            <a href="/app/github" class="btn btn-lg btn-primary">Sign in with GitHub</a>
+        <% } %>
+
+      </p>
+    </div>
+  </main>
+</div>
+
+<%- include('partials/footer')%>

@@ -1,0 +1,40 @@
+<%- include('partials/head')%>
+<%- include('partials/navbar')%>
+
+<div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+  <main role="main" class="inner-cover" style="height: 80vh">
+    <div class="h-100 d-flex flex-column justify-content-center align-items-center">
+      <form
+              style="max-width: 330px; width: 100%; padding: 15px; margin: 0 auto"
+              class="form-signin"
+              action="/app/graph"
+              method="POST"
+      >
+        <h1 class="h3 mb-3 font-weight-normal text-center">Graph Visualiser</h1>
+        <label for="repoName" class="sr-only">Repository Name</label>
+        <input
+                type="text"
+                name="repoName"
+                id="repoName"
+                class="form-control mb-3"
+                placeholder="Repository Name"
+                required
+        />
+        <label for="numReleases" class="sr-only">No. Releases</label>
+        <input
+                type="text"
+                name="numReleases"
+                id="numReleases"
+                class="form-control mb-3"
+                placeholder="No. Releases"
+                required
+        />
+        <button class="btn btn-lg btn-primary btn-block" type="submit">
+          View Graph
+        </button>
+      </form>
+    </div>
+  </main>
+</div>
+
+<%- include('partials/footer')%>

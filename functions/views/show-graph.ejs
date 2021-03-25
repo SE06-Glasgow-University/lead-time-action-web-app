@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Lead Time Visualiser</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"
+            integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw=="
+            crossorigin="anonymous"></script>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/app/">Lead Time For Change</a>
+    <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+    >
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-link" href="/app/graph-login">View Graph</a>
+            <% if (loggedIn !== undefined && loggedIn === true) { %>
+                <a class="nav-link" href="/app/logout">Profile</a>
+                <a class="nav-link" href="/app/logout">Logout</a>
+            <% } %>
+            <% if (loggedIn !== undefined && loggedIn === false) { %>
+                <a class="nav-link" href="/app/github">login</a>
+            <% } %>
+        </div>
+    </div>
+</nav>
+
+<div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+    <main role="main" class="inner-cover" style="height: 80vh">
+        <div class="h-100 d-flex flex-column justify-content-center align-items-center">
+            <% if(errorMessage !== undefined){ %>
+                <h1><%= errorMessage %></h1>
+            <% } else{ %>
+                    <h1><%= repo %></h1>
+                    <canvas id="myChart" class="container"></canvas>
+                    <script>
+
+                        const labels = '<%- JSON.stringify(labels) %>';
+                        const dataset = '<%- JSON.stringify(leadTimes) %>';
+                        const tags = '<%- JSON.stringify(tags) %>';
+
+                        const ctx = document.getElementById('myChart').getContext('2d');
+                        const chart = new Chart(ctx, {
+                            // The type of chart we want to create
+                            type: 'line',
+
+                            // The data for our dataset
+                            data: {
+                                labels: JSON.parse(labels),
+                                tagNames: JSON.parse(tags),
+                                datasets: [{
+                                    label: 'Lead Time for change',
+                                    backgroundColor: 'rgb(0, 63, 92)',
+                                    borderColor: 'rgb(255, 166, 0)',
+                                    data: JSON.parse(dataset)
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    xAxes: [{
+                                        scaleLabel: {
+                                            display: true,
+                                            labelString: 'Date'
+                                        }
+                                    }],
+                                    yAxes: [{
+                                        scaleLabel: {
+                                            display: true,
+                                            labelString: 'Lead Time For Change'
+                                        }
+                                    }]
+                                },
+                                tooltips: {
+                                    enabled: true,
+                                    callbacks: {
+                                        title: function(tooltipItem, data) {
+                                            return data.tagNames[tooltipItem[0].index];
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+            <% } %>
+        </div>
+    </main>
+</div>
+<%- include('partials/footer')%>
