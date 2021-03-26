@@ -1,6 +1,6 @@
 // utilities.js
 
-const {db} = require("./firebase-setup");
+const {dbAdmin} = require("./firebase-setup");
 
 /**
  * checks if user exists in user collection given uid
@@ -8,7 +8,7 @@ const {db} = require("./firebase-setup");
  * @return {Promise<boolean>} resolves true if document exists with docID = uid, false otherwise
  */
 const userExists = async (uid) => {
-  const doc = await db.doc(`/users/${uid}`).get();
+  const doc = await dbAdmin.doc(`/users/${uid}`).get();
   return doc.exists;
 };
 
@@ -20,15 +20,19 @@ const userExists = async (uid) => {
  */
 const authenticate = async (username, userToken) => {
   try {
-    const snapshot = await db.collection("users").where("username", "==", username).get();
+    let found = false;
+    const snapshot = await dbAdmin.collection("users").where("username", "==", username).get();
     if (snapshot.empty) {
       // no such user
       return false;
     }
 
     snapshot.forEach((doc) => {
-      return (userToken === doc.data().token);
+      if (userToken === doc.data().token) {
+        found = true;
+      }
     });
+    return found;
   } catch (error) {
     console.log(error.message);
     return false;
